@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input {
+            padding: 5px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <h1>Product Management System</h1>
+
+    <!-- Add Product Form -->
+    <div class="form-group">
+        <h2>Add New Product</h2>
+        <input type="text" id="newValue" placeholder="Product Name">
+        <input type="number" id="newPrice" placeholder="Price">
+        <button onclick="addProduct()">Add Product</button>
+    </div>
+
+    <!-- Update Product Form -->
+    <div class="form-group">
+        <h2>Update Product</h2>
+        <input type="number" id="updateId" placeholder="Product ID">
+        <input type="text" id="updateValue" placeholder="New Name">
+        <input type="number" id="updatePrice" placeholder="New Price">
+        <button onclick="updateProduct()">Update Product</button>
+        <button onclick="partialUpdateProduct()">Partial Update</button>
+    </div>
+
+    <!-- Delete Product Form -->
+    <div class="form-group">
+        <h2>Delete Product</h2>
+        <input type="number" id="deleteId" placeholder="Product ID">
+        <button onclick="deleteProduct()">Delete Product</button>
+    </div>
+
+    <!-- Product List -->
+    <h2>Product List</h2>
+    <button onclick="loadProducts()">Refresh List</button>
+    <table id="productTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Product</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody id="productList">
+        </tbody>
+    </table>
+
+    <script>
+        // Load products when page loads
+        loadProducts();
+
+        function loadProducts() {
+            fetch('http://localhost:5000/product')
+                .then(response => response.json())
+                .then(data => {
+                    const productList = document.getElementById('productList');
+                    productList.innerHTML = '';
+                    data.forEach(item => {
+                        productList.innerHTML += `
+                            <tr>
+                                <td>${item.id}</td>
+                                <td>${item.value}</td>
+                                <td>${item.price}</td>
+                            </tr>
+                        `;
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function addProduct() {
+            const value = document.getElementById('newValue').value;
+            const price = document.getElementById('newPrice').value;
+            
+            fetch('http://localhost:5000/product', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ value, price: Number(price) }),
+            })
+            .then(response => response.json())
+            .then(() => {
+                loadProducts();
+                document.getElementById('newValue').value = '';
+                document.getElementById('newPrice').value = '';
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function updateProduct() {
+            const id = document.getElementById('updateId').value;
+            const value = document.getElementById('updateValue').value;
+            const price = document.getElementById('updatePrice').value;
+
+            fetch(`http://localhost:5000/product/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ value, price: Number(price) }),
+            })
+            .then(response => response.json())
+            .then(() => {
+                loadProducts();
+                document.getElementById('updateId').value = '';
+                document.getElementById('updateValue').value = '';
+                document.getElementById('updatePrice').value = '';
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function partialUpdateProduct() {
+            const id = document.getElementById('updateId').value;
+            const value = document.getElementById('updateValue').value;
+            const price = document.getElementById('updatePrice').value;
+            const updateData = {};
+            
+            if (value) updateData.value = value;
+            if (price) updateData.price = Number(price);
+
+            fetch(`http://localhost:5000/product/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updateData),
+            })
+            .then(response => response.json())
+            .then(() => {
+                loadProducts();
+                document.getElementById('updateId').value = '';
+                document.getElementById('updateValue').value = '';
+                document.getElementById('updatePrice').value = '';
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function deleteProduct() {
+            const id = document.getElementById('deleteId').value;
+
+            fetch(`http://localhost:5000/product/${id}`, {
+                method: 'DELETE',
+            })
+            .then(response => response.json())
+            .then(() => {
+                loadProducts();
+                document.getElementById('deleteId').value = '';
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
