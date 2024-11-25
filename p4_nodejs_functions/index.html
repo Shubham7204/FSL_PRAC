@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js API UI</title>
+</head>
+<body>
+    <h1>Node.js API Interaction UI</h1>
+
+    <!-- Section for Creating a New Item -->
+    <h2>Create Item</h2>
+    <input type="text" id="createName" placeholder="Enter item name">
+    <button onclick="createItem()">Create Item</button>
+    <div id="createResult"></div>
+
+    <!-- Section for Reading All Items -->
+    <h2>Get All Items</h2>
+    <button onclick="getAllItems()">Fetch All Items</button>
+    <div id="allItems"></div>
+
+    <!-- Section for Updating an Item -->
+    <h2>Update Item</h2>
+    <input type="number" id="updateId" placeholder="Enter item ID">
+    <input type="text" id="updateName" placeholder="Enter new item name">
+    <button onclick="updateItem()">Update Item</button>
+    <div id="updateResult"></div>
+
+    <!-- Section for Deleting an Item -->
+    <h2>Delete Item</h2>
+    <input type="number" id="deleteId" placeholder="Enter item ID">
+    <button onclick="deleteItem()">Delete Item</button>
+    <div id="deleteResult"></div>
+
+    <!-- JavaScript for Making API Calls -->
+    <script>
+        const apiBase = 'http://localhost:3000';
+
+        // Function to Create an Item
+        async function createItem() {
+            const name = document.getElementById('createName').value;
+            const response = await fetch(`${apiBase}/items`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name })
+            });
+            const result = await response.json();
+            document.getElementById('createResult').innerText = JSON.stringify(result);
+        }
+
+        // Function to Get All Items
+        async function getAllItems() {
+            const response = await fetch(`${apiBase}/items`);
+            const items = await response.json();
+            document.getElementById('allItems').innerText = JSON.stringify(items, null, 2);
+        }
+
+        // Function to Update an Item
+        async function updateItem() {
+            const id = document.getElementById('updateId').value;
+            const name = document.getElementById('updateName').value;
+            const response = await fetch(`${apiBase}/items/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name })
+            });
+            const result = await response.json();
+            document.getElementById('updateResult').innerText = JSON.stringify(result);
+        }
+
+        // Function to Delete an Item
+        async function deleteItem() {
+            const id = document.getElementById('deleteId').value;
+            const response = await fetch(`${apiBase}/items/${id}`, {
+                method: 'DELETE'
+            });
+            const result = await response.json();
+            document.getElementById('deleteResult').innerText = JSON.stringify(result);
+        }
+    </script>
+</body>
+</html>
