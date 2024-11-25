@@ -1,0 +1,48 @@
+/* App.css */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: white;
+  height: 100vh; /* Full viewport height for centering */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.app-container {
+  text-align: center;
+  padding: 20px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.bg-display {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.bg-color-name {
+  text-transform: capitalize;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.color-button {
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
