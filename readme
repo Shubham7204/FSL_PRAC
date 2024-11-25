@@ -1,2 +1,68 @@
 npm init -y
 npm install express mongoose cors body-parser
+
+
+```bash
+mongosh
+
+mongosh "mongodb+srv://cluster.example.com" --username <username>
+
+show dbs
+
+use <database_name>
+
+show collections
+
+db.<collection_name>.insertOne({ name: "John", age: 25, city: "New York" });
+
+db.<collection_name>.insertMany([
+  { name: "Alice", age: 30, city: "London" },
+  { name: "Bob", age: 35, city: "Paris" }
+]);
+
+
+db.<collection_name>.find();
+
+db.<collection_name>.find({ city: "New York" });
+
+db.<collection_name>.find({ city: "New York" }, { name: 1, _id: 0 });
+
+db.<collection_name>.findOne({ name: "John" });
+
+db.<collection_name>.updateOne(
+  { name: "John" },
+  { $set: { age: 26 } }
+);
+
+db.<collection_name>.updateMany(
+  { city: "London" },
+  { $set: { city: "Manchester" } }
+);
+
+db.<collection_name>.replaceOne(
+  { name: "Alice" },
+  { name: "Alice", age: 32, city: "Edinburgh" }
+);
+
+db.<collection_name>.deleteOne({ name: "John" });
+
+db.<collection_name>.deleteMany({ city: "Manchester" });
+
+db.<collection_name>.createIndex({ name: 1 });
+
+db.<collection_name>.getIndexes();
+
+db.<collection_name>.aggregate([
+  { $match: { city: "New York" } },
+  { $group: { _id: "$city", total: { $sum: 1 } } }
+]);
+
+db.<collection_name>.drop();
+
+db.dropDatabase();
+
+db
+
+db.serverStatus();
+
+exit
